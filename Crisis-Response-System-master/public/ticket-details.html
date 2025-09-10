@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Details | Disaster Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a2a6c;
+            --secondary-color: #b21f1f;
+            --accent-color: #fdbb2d;
+            --background-color: #f5f7fa;
+            --text-color: #333;
+            --card-bg: #fff;
+            --card-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            --success-color: #4CAF50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #111d45;
+        }
+
+        .ticket-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .main-content {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .ticket-info h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .ticket-meta {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .ticket-status {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: var(--warning-color);
+        }
+
+        .status-assigned {
+            background: #e3f2fd;
+            color: var(--info-color);
+        }
+
+        .status-in-progress {
+            background: #e8f5e9;
+            color: var(--success-color);
+        }
+
+        .status-resolved {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .ticket-description {
+            margin-bottom: 30px;
+        }
+
+        .ticket-description h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .ticket-description p {
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .ticket-updates {
+            margin-top: 30px;
+        }
+
+        .ticket-updates h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .update-item {
+            padding: 15px;
+            border-left: 3px solid var(--primary-color);
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .update-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .update-content {
+            color: var(--text-color);
+        }
+
+        .side-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .info-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #111d45;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #f57c00;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        @media (max-width: 768px) {
+            .ticket-details {
+                grid-template-columns: 1fr;
+            }
+
+            .ticket-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .ticket-meta {
+                flex-wrap: wrap;
+            }
+
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="page-title">Ticket Details</h1>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </div>
+
+        <div class="ticket-details">
+            <div class="main-content">
+                <div class="ticket-header">
+                    <div class="ticket-info">
+                        <h2 id="ticket-title">Loading...</h2>
+                        <div class="ticket-meta">
+                            <span id="ticket-id">Ticket ID: -</span>
+                            <span id="ticket-date">Date: -</span>
+                            <span id="ticket-priority">Priority: -</span>
+                        </div>
+                    </div>
+                    <div class="ticket-status" id="ticket-status">-</div>
+                </div>
+
+                <div class="ticket-description">
+                    <h3>Description</h3>
+                    <p id="ticket-description">Loading...</p>
+                </div>
+
+                <div class="ticket-updates">
+                    <h3>Updates</h3>
+                    <div id="updates-container">
+                        <div class="update-item">
+                            <div class="update-header">
+                                <span>Loading updates...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-content">
+                <div class="info-card">
+                    <h3>Reporter Information</h3>
+                    <div class="info-item">
+                        <div class="info-label">Name</div>
+                        <div class="info-value" id="reporter-name">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value" id="reporter-email">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value" id="reporter-phone">-</div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Assigned Official</h3>
+                    <div class="info-item">
+                        <div class="info-label">Name</div>
+                        <div class="info-value" id="official-name">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value" id="official-email">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value" id="official-phone">-</div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Actions</h3>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="update-status">
+                            <i class="fas fa-sync"></i>
+                            Update Status
+                        </button>
+                        <button class="btn btn-warning" id="add-note">
+                            <i class="fas fa-comment"></i>
+                            Add Note
+                        </button>
+                        <button class="btn btn-danger" id="close-ticket">
+                            <i class="fas fa-times"></i>
+                            Close Ticket
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get ticket ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const ticketId = urlParams.get('id');
+
+        if (!ticketId) {
+            window.location.href = 'index.html';
+        }
+
+        // Fetch ticket details
+        async function fetchTicketDetails() {
+            try {
+                const response = await fetch(`/api/tickets/${ticketId}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayTicketDetails(data);
+                } else {
+                    throw new Error(data.error || 'Failed to fetch ticket details');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load ticket details. Please try again later.');
+            }
+        }
+
+        // Display ticket details
+        function displayTicketDetails(data) {
+            const { ticket, updates } = data;
+
+            // Update ticket header
+            document.getElementById('ticket-title').textContent = ticket.title;
+            document.getElementById('ticket-id').textContent = `Ticket ID: ${ticket.id}`;
+            document.getElementById('ticket-date').textContent = `Date: ${new Date(ticket.created_at).toLocaleString()}`;
+            document.getElementById('ticket-priority').textContent = `Priority: ${ticket.priority}`;
+            
+            // Update status
+            const statusElement = document.getElementById('ticket-status');
+            statusElement.textContent = ticket.status;
+            statusElement.className = `ticket-status status-${ticket.status.toLowerCase().replace(' ', '-')}`;
+
+            // Update description
+            document.getElementById('ticket-description').textContent = ticket.description;
+
+            // Update reporter information
+            document.getElementById('reporter-name').textContent = ticket.reporter_name;
+            document.getElementById('reporter-email').textContent = ticket.reporter_email;
+            document.getElementById('reporter-phone').textContent = ticket.reporter_phone;
+
+            // Update assigned official information
+            document.getElementById('official-name').textContent = ticket.assigned_official_name || 'Not assigned';
+            document.getElementById('official-email').textContent = ticket.assigned_official_email || '-';
+            document.getElementById('official-phone').textContent = ticket.assigned_official_phone || '-';
+
+            // Update updates section
+            const updatesContainer = document.getElementById('updates-container');
+            updatesContainer.innerHTML = updates.map(update => `
+                <div class="update-item">
+                    <div class="update-header">
+                        <span>${update.updated_by_name}</span>
+                        <span>${new Date(update.created_at).toLocaleString()}</span>
+                    </div>
+                    <div class="update-content">${update.update_text}</div>
+                </div>
+            `).join('');
+        }
+
+        // Event listeners for action buttons
+        document.getElementById('update-status').addEventListener('click', function() {
+            // Implement status update functionality
+            console.log('Update status clicked');
+        });
+
+        document.getElementById('add-note').addEventListener('click', function() {
+            // Implement add note functionality
+            console.log('Add note clicked');
+        });
+
+        document.getElementById('close-ticket').addEventListener('click', function() {
+            // Implement close ticket functionality
+            console.log('Close ticket clicked');
+        });
+
+        // Load ticket details when page loads
+        document.addEventListener('DOMContentLoaded', fetchTicketDetails);
+    </script>
+</body>
+</html> 

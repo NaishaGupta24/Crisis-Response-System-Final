@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Tickets | DMP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a2a6c;
+            --secondary-color: #b21f1f;
+            --accent-color: #fdbb2d;
+            --background-color: #f5f7fa;
+            --text-color: #333;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --card-bg: #fff;
+            --card-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            --success-color: #4CAF50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--primary-color);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-collapsed {
+            left: calc(-1 * var(--sidebar-width) + 60px);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header .logo-icon {
+            font-size: 24px;
+        }
+
+        .sidebar-header .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .collapsed .logo-text {
+            opacity: 0;
+            width: 0;
+        }
+
+        .sidebar-toggle {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .menu-text {
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .collapsed .menu-text {
+            opacity: 0;
+            width: 0;
+        }
+
+        .collapsed .menu-item {
+            padding: 12px;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+        .main-content.expanded {
+            margin-left: 60px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Filters */
+        .filters {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            background: white;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.1);
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        /* Tickets Table */
+        .tickets-container {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .tickets-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tickets-table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #eee;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .tickets-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tickets-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tickets-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .tickets-table tbody tr:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .ticket-status {
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-assigned {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+        }
+
+        .status-in-progress {
+            background: rgba(156, 39, 176, 0.1);
+            color: #9c27b0;
+        }
+
+        .status-resolved {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .action-button {
+            padding: 5px 15px;
+            border-radius: 50px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .action-button:hover {
+            background: #111d45;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .page-button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-button:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .page-button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: calc(-1 * var(--sidebar-width));
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .main-content.sidebar-active {
+                margin-left: var(--sidebar-width);
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tickets-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-hands-helping logo-icon"></i>
+                <span class="logo-text">DMP</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a href="tickets.html" class="menu-item active">
+                <i class="fas fa-ticket-alt"></i>
+                <span class="menu-text">All Tickets</span>
+            </a>
+            <a href="resources.html" class="menu-item">
+                <i class="fas fa-truck"></i>
+                <span class="menu-text">Resources</span>
+            </a>
+            <a href="officials.html" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Officials</span>
+            </a>
+            <a href="reports.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span class="menu-text">Reports</span>
+            </a>
+            <a href="settings.html" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span class="menu-text">Settings</span>
+            </a>
+            <a href="../index.html" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="menu-text">Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="page-title">All Tickets</h1>
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-name">Akshat Jain</div>
+                    <div class="user-role">Administrative Officer</div>
+                </div>
+                <div class="user-avatar">AJ</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <select class="filter-select" id="status-filter">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="assigned">Assigned</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Priority</label>
+                    <select class="filter-select" id="priority-filter">
+                        <option value="">All Priority</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Type</label>
+                    <select class="filter-select" id="type-filter">
+                        <option value="">All Types</option>
+                        <option value="medical">Medical Emergency</option>
+                        <option value="evacuation">Evacuation</option>
+                        <option value="food">Food & Water</option>
+                        <option value="shelter">Shelter</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Date Range</label>
+                    <select class="filter-select" id="date-filter">
+                        <option value="">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container" style="margin-bottom: 20px;">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search tickets..." id="ticket-search">
+        </div>
+
+        <!-- Tickets Table -->
+        <div class="tickets-container">
+            <table class="tickets-table">
+                <thead>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#1001</td>
+                        <td>Medical Emergency</td>
+                        <td>Balewadi High Street</td>
+                        <td><span class="ticket-status status-pending">Pending</span></td>
+                        <td>High</td>
+                        <td>Feb 26, 2025</td>
+                        <td><button class="action-button">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>#1002</td>
+                        <td>Evacuation</td>
+                        <td>MG Road</td>
+                        <td><span class="ticket-status status-assigned">Assigned</span></td>
+                        <td>High</td>
+                        <td>Feb 28, 2025</td>
+                        <td><button class="action-button">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>#1003</td>
+                        <td>Food & Water</td>
+                        <td>Kothrud</td>
+                        <td><span class="ticket-status status-in-progress">In Progress</span></td>
+                        <td>Medium</td>
+                        <td>Mar 2, 2025</td>
+                        <td><button class="action-button">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>#1004</td>
+                        <td>Shelter</td>
+                        <td>PMC Water Tank, Kharadi</td>
+                        <td><span class="ticket-status status-resolved">Resolved</span></td>
+                        <td>Low</td>
+                        <td>Mar 1, 2025</td>
+                        <td><button class="action-button">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>#1005</td>
+                        <td>Medical Emergency</td>
+                        <td>PCMC Metro Station</td>
+                        <td><span class="ticket-status status-pending">Pending</span></td>
+                        <td>High</td>
+                        <td>Mar 1, 2025</td>
+                        <td><button class="action-button">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>#1006</td>
+                        <td>Evacuation</td>
+                        <td>Swargate Bus Stand</td>
+                        <td><span class="ticket-status status-assigned">Assigned</span></td>
+                        <td>Medium</td>
+                        <td>Mar 3, 2025</td>
+                        <td><button class="action-button">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-button">Previous</button>
+                <button class="page-button active">1</button>
+                <button class="page-button">2</button>
+                <button class="page-button">3</button>
+                <button class="page-button">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar toggle
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+            document.getElementById('main-content').classList.toggle('expanded');
+        });
+
+        // Filter functionality
+        const filters = document.querySelectorAll('.filter-select');
+        filters.forEach(filter => {
+            filter.addEventListener('change', function() {
+                // In a real app, you'd make an API call here with the filter values
+                console.log('Filter changed:', this.id, this.value);
+            });
+        });
+
+        // Search functionality
+        document.getElementById('ticket-search').addEventListener('input', function(e) {
+            // In a real app, you'd make an API call here with the search term
+            console.log('Searching for:', e.target.value);
+        });
+
+        // Pagination
+        document.querySelectorAll('.page-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.page-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Add active class to clicked button
+                this.classList.add('active');
+                // In a real app, you'd load the corresponding page data
+                console.log('Page changed:', this.textContent);
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Login | Disaster Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a2a6c;
+            --secondary-color: #b21f1f;
+            --accent-color: #fdbb2d;
+            --background-color: #f5f7fa;
+            --text-color: #333;
+            --card-bg: #fff;
+            --card-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            --success-color: #4CAF50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .auth-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            min-height: 600px;
+        }
+
+        .auth-image {
+            background: url('https://images.unsplash.com/photo-1590496793929-36417d3117de?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2096&q=80') center/cover;
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+            color: white;
+        }
+
+        .auth-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
+            z-index: 1;
+        }
+
+        .auth-image-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .auth-image-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-image-description {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .back-home:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-form {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .form-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-logo i {
+            font-size: 36px;
+            color: var(--primary-color);
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.1);
+        }
+
+        .form-input-group {
+            position: relative;
+        }
+
+        .form-input-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 15px;
+            color: #888;
+        }
+
+        .input-with-icon {
+            padding-left: 40px;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .form-submit:hover {
+            background: #111d45;
+        }
+
+        .form-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .form-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .form-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .form-divider::before,
+        .form-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #eee;
+        }
+
+        .form-divider::before {
+            margin-right: 15px;
+        }
+
+        .form-divider::after {
+            margin-left: 15px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .social-button:hover {
+            background: #f9f9f9;
+            border-color: #ccc;
+        }
+
+        .google-icon {
+            color: #DB4437;
+        }
+
+        .microsoft-icon {
+            color: #0078D4;
+        }
+        
+        /* Form toggle */
+        .auth-form-container {
+            position: relative;
+            flex: 1;
+        }
+        
+        .auth-form {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .auth-form.hidden {
+            transform: translateX(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Forgot Password Form */
+        .reset-success {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .success-icon {
+            font-size: 50px;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .success-message {
+            color: #777;
+            margin-bottom: 20px;
+        }
+        
+        /* Error Messages */
+        .error-message {
+            color: var(--danger-color);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .form-control.error {
+            border-color: var(--danger-color);
+        }
+        
+        .form-control.error + .error-message {
+            display: block;
+        }
+        
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+                max-height: none;
+            }
+            
+            .auth-image {
+                min-height: 200px;
+                padding: 20px;
+            }
+            
+            .auth-form-container {
+                min-height: 500px;
+            }
+            
+            .auth-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-image">
+            <div class="auth-image-content">
+                <h2 class="auth-image-title">Disaster Management System</h2>
+                <p class="auth-image-description">
+                    Secure portal for government officials to manage emergency responses and coordinate relief efforts efficiently.
+                </p>
+                <a href="../index.html" class="back-home">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+        
+        <div class="auth-form-container">
+            <!-- Login Form -->
+            <div class="auth-form" id="login-form">
+                <div class="form-logo">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h2 class="form-title">Official Login</h2>
+                <p class="form-subtitle">
+                    Enter your credentials to access your account
+                </p>
+                
+                <form id="official-login-form">
+                    <div class="form-group">
+                        <label for="login-email" class="form-label">Email Address</label>
+                        <div class="form-input-group">
+                            <i class="fas fa-envelope form-input-icon"></i>
+                            <input type="email" id="login-email" class="form-control input-with-icon" placeholder="Enter your email" required>
+                            <div class="error-message">Please enter a valid email address</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password" class="form-label">Password</label>
+                        <div class="form-input-group">
+                            <i class="fas fa-lock form-input-icon"></i>
+                            <input type="password" id="login-password" class="form-control input-with-icon" placeholder="Enter your password" required>
+                            <div class="error-message">Password is required</div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: right; margin-bottom: 20px;">
+                        <a class="form-link" onclick="showForgotPassword()">Forgot Password?</a>
+                    </div>
+                    
+                    <button type="submit" class="form-submit">Login</button>
+                </form>
+                
+                <div class="form-divider">OR</div>
+                
+                <div class="social-login">
+                    <button class="social-button">
+                        <i class="fab fa-google google-icon"></i>
+                        Google
+                    </button>
+                    <button class="social-button">
+                        <i class="fab fa-microsoft microsoft-icon"></i>
+                        Microsoft
+                    </button>
+                </div>
+                
+                <p class="form-text">
+                    Don't have an account? <a class="form-link" onclick="showSignup()">Sign up</a>
+                </p>
+            </div>
+            
+            <!-- Signup Form -->
+            <div class="auth-form hidden" id="signup-form">
+                <div class="form-logo">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2 class="form-title">Create an Account</h2>
+                <p class="form-subtitle">
+                    Register as a government official
+                </p>
+                
+                <form id="official-signup-form">
+                    <div class="form-group">
+                        <label for="signup-name" class="form-label">Full Name</label>
+                        <div class="form-input-group">
+                            <i class="fas fa-user form-input-icon"></i>
+                            <input type="text" id="signup-name" class="form-control input-with-icon" placeholder="Enter your full name" required>
+                            <div class="error-message">Name is required</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signup-email" class="form-label">Email Address</label>
+                        <div class="form-input-group">
+                            <i class="fas fa-envelope form-input-icon"></i>
+                            <input type="email" id="signup-email" class="form-control input-with-icon" placeholder="Enter your email" required>
+                            <div class="error-message">Please enter a valid email address</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signup-password" class="form-label">Password</label>
+                        <div class="form-input-group">
+                            <i class="fas fa-lock form-input-icon"></i>
+                            <input type="password" id="signup-password" class="form-control input-with-icon" placeholder="Create a password" required>
+                            <div class="error-message">Password must be at least 8 characters</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signup-department" class="form-label">Department</label>
+                        <div class="form-input-group">
+                            <i class="fas fa-building form-input-icon"></i>
+                            <input type="text" id="signup-department" class="form-control input-with-icon" placeholder="Enter your department" required>
+                            <div class="error-message">Department is required</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signup-mobile" class="form-label">Mobile Number</label>
+                        <div class="form-input-group">
+                            <i class="fas fa-phone form-input-icon"></i>
+                            <input type="tel" id="signup-mobile" class="form-control input-with-icon" placeholder="Enter your mobile number" required>
+                            <div class="error-message">Please enter a valid mobile number</div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="form-submit">Sign Up</button>
+                </form>
+                
+                <p class="form-text">
+                    Already have an account? <a class="form-link" onclick="showLogin()">Login</a>
+                </p>
+            </div>
+            
+            <!-- Forgot Password Form -->
+            <div class="auth-form hidden" id="forgot-password-form">
+                <div class="form-logo">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h2 class="form-title">Reset Password</h2>
+                <p class="form-subtitle">
+                    Enter your email to receive a password reset link
+                </p>
+                
+                <form id="password-reset-form">
+                    <div class="form-group">
+                        <label for="reset-email" class="form-label">Email Address</label>
+                        <div class="form-input-group">
+                            <i class="fas fa-envelope form-input-icon"></i>
+                            <input type="email" id="reset-email" class="form-control input-with-icon" placeholder="Enter your email" required>
+                            <div class="error-message">Please enter a valid email address</div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="form-submit">Send Reset Link</button>
+                </form>
+                
+                <p class="form-text">
+                    Remember your password? <a class="form-link" onclick="showLogin()">Login</a>
+                </p>
+            </div>
+            
+            <!-- Reset Success Message -->
+            <div class="auth-form hidden" id="reset-success-form">
+                <div class="reset-success">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="success-title">Reset Link Sent</h3>
+                    <p class="success-message">
+                        We've sent a password reset link to your email address. Please check your inbox and follow the instructions to reset your password.
+                    </p>
+                    <button class="form-submit" onclick="showLogin()">Back to Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Form toggle functions
+        function showLogin() {
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('forgot-password-form').classList.add('hidden');
+            document.getElementById('reset-success-form').classList.add('hidden');
+        }
+        
+        function showSignup() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('signup-form').classList.remove('hidden');
+            document.getElementById('forgot-password-form').classList.add('hidden');
+            document.getElementById('reset-success-form').classList.add('hidden');
+        }
+        
+        function showForgotPassword() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('forgot-password-form').classList.remove('hidden');
+            document.getElementById('reset-success-form').classList.add('hidden');
+        }
+        
+        function showResetSuccess() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('forgot-password-form').classList.add('hidden');
+            document.getElementById('reset-success-form').classList.remove('hidden');
+        }
+        
+        // Form validation
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+        
+        function validatePassword(password) {
+            return password.length >= 8;
+        }
+        
+        function validateMobile(mobile) {
+            const re = /^[0-9]{10}$/;
+            return re.test(mobile);
+        }
+        
+        // Login form submission
+        document.getElementById('official-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            let isValid = true;
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                document.getElementById('login-email').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('login-email').classList.remove('error');
+            }
+            
+            // Validate password
+            if (password.trim() === '') {
+                document.getElementById('login-password').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('login-password').classList.remove('error');
+            }
+            
+            if (isValid) {
+                // In a real app, you'd make an API call here
+                // For demo, we'll just redirect to the dashboard
+                window.location.href = 'dashboard.html';
+            }
+        });
+        
+        // Signup form submission
+        document.getElementById('official-signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const department = document.getElementById('signup-department').value;
+            const mobile = document.getElementById('signup-mobile').value;
+            let isValid = true;
+            
+            // Validate name
+            if (name.trim() === '') {
+                document.getElementById('signup-name').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('signup-name').classList.remove('error');
+            }
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                document.getElementById('signup-email').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('signup-email').classList.remove('error');
+            }
+            
+            // Validate password
+            if (!validatePassword(password)) {
+                document.getElementById('signup-password').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('signup-password').classList.remove('error');
+            }
+            
+            // Validate department
+            if (department.trim() === '') {
+                document.getElementById('signup-department').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('signup-department').classList.remove('error');
+            }
+            
+            // Validate mobile
+            if (!validateMobile(mobile)) {
+                document.getElementById('signup-mobile').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('signup-mobile').classList.remove('error');
+            }
+            
+            if (isValid) {
+                // In a real app, you'd make an API call here
+                // For demo, we'll just redirect to the dashboard
+                window.location.href = 'dashboard.html';
+            }
+        });
+        
+        // Password reset form submission
+        document.getElementById('password-reset-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('reset-email').value;
+            let isValid = true;
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                document.getElementById('reset-email').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('reset-email').classList.remove('error');
+            }
+            
+            if (isValid) {
+                // In a real app, you'd make an API call here
+                // For demo, we'll just show the success message
+                showResetSuccess();
+            }
+        });
+    </script>
+</body>
+</html> 

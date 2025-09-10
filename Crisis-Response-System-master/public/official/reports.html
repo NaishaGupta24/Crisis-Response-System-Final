@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics | Disaster Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a2a6c;
+            --secondary-color: #b21f1f;
+            --accent-color: #fdbb2d;
+            --background-color: #f5f7fa;
+            --text-color: #333;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --card-bg: #fff;
+            --card-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            --success-color: #4CAF50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* Sidebar styles (same as other pages) */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--primary-color);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-collapsed {
+            left: calc(-1 * var(--sidebar-width) + 60px);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header .logo-icon {
+            font-size: 24px;
+        }
+
+        .sidebar-header .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .collapsed .logo-text {
+            opacity: 0;
+            width: 0;
+        }
+
+        .sidebar-toggle {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .menu-text {
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .collapsed .menu-text {
+            opacity: 0;
+            width: 0;
+        }
+
+        .collapsed .menu-item {
+            padding: 12px;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+        .main-content.expanded {
+            margin-left: 60px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Reports Grid */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .report-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .report-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
+            margin-bottom: 15px;
+        }
+
+        /* Report Filters */
+        .report-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            background: white;
+            min-width: 120px;
+        }
+
+        .export-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .export-btn:hover {
+            background: #111d45;
+        }
+
+        /* Report Tables */
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .report-table th,
+        .report-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .report-table th {
+            font-weight: 600;
+            color: var(--primary-color);
+            background: #f8f9fa;
+        }
+
+        .report-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: calc(-1 * var(--sidebar-width));
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .main-content.sidebar-active {
+                margin-left: var(--sidebar-width);
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .report-filters {
+                flex-direction: column;
+            }
+
+            .filter-item {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-hands-helping logo-icon"></i>
+                <span class="logo-text">Disaster Management</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a href="tickets.html" class="menu-item">
+                <i class="fas fa-ticket-alt"></i>
+                <span class="menu-text">All Tickets</span>
+            </a>
+            <a href="resources.html" class="menu-item">
+                <i class="fas fa-truck"></i>
+                <span class="menu-text">Resources</span>
+            </a>
+            <a href="officials.html" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Officials</span>
+            </a>
+            <a href="reports.html" class="menu-item active">
+                <i class="fas fa-chart-bar"></i>
+                <span class="menu-text">Reports</span>
+            </a>
+            <a href="settings.html" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span class="menu-text">Settings</span>
+            </a>
+            <a href="../index.html" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="menu-text">Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="page-title">Reports & Analytics</h1>
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-name">Akshat Jain</div>
+                    <div class="user-role">Administrative Officer</div>
+                </div>
+                <div class="user-avatar">AJ</div>
+            </div>
+        </div>
+
+        <!-- Report Filters -->
+        <div class="report-filters">
+            <div class="filter-item">
+                <span class="filter-label">Time Period:</span>
+                <select class="filter-select" id="time-period">
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="year">This Year</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <span class="filter-label">Report Type:</span>
+                <select class="filter-select" id="report-type">
+                    <option value="performance">Performance</option>
+                    <option value="resources">Resources</option>
+                    <option value="response">Response Time</option>
+                    <option value="team">Team Performance</option>
+                </select>
+            </div>
+            <button class="export-btn">
+                <i class="fas fa-download"></i>
+                <span>Export Report</span>
+            </button>
+        </div>
+
+        <!-- Reports Grid -->
+        <div class="reports-grid">
+            <!-- Emergency Response Performance -->
+            <div class="report-card">
+                <h3>Emergency Response Performance</h3>
+                <div class="chart-container">
+                    <canvas id="responseChart"></canvas>
+                </div>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Average Response Time</td>
+                            <td>15 minutes</td>
+                        </tr>
+                        <tr>
+                            <td>Resolution Rate</td>
+                            <td>92%</td>
+                        </tr>
+                        <tr>
+                            <td>Customer Satisfaction</td>
+                            <td>4.5/5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Resource Utilization -->
+            <div class="report-card">
+                <h3>Resource Utilization</h3>
+                <div class="chart-container">
+                    <canvas id="resourceChart"></canvas>
+                </div>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Resource</th>
+                            <th>Utilization</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Emergency Vehicles</td>
+                            <td>75%</td>
+                        </tr>
+                        <tr>
+                            <td>Medical Supplies</td>
+                            <td>60%</td>
+                        </tr>
+                        <tr>
+                            <td>Personnel</td>
+                            <td>85%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Team Performance -->
+            <div class="report-card">
+                <h3>Team Performance</h3>
+                <div class="chart-container">
+                    <canvas id="teamChart"></canvas>
+                </div>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Medical</td>
+                            <td>95%</td>
+                        </tr>
+                        <tr>
+                            <td>Rescue</td>
+                            <td>88%</td>
+                        </tr>
+                        <tr>
+                            <td>Logistics</td>
+                            <td>92%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Emergency Types Distribution -->
+            <div class="report-card">
+                <h3>Emergency Types Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="emergencyChart"></canvas>
+                </div>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Medical</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <td>Rescue</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td>Evacuation</td>
+                            <td>25</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar toggle
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+            document.getElementById('main-content').classList.toggle('expanded');
+        });
+
+        // Response Time Chart
+        const responseCtx = document.getElementById('responseChart').getContext('2d');
+        new Chart(responseCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Response Time (minutes)',
+                    data: [20, 15, 18, 12, 16, 14, 15],
+                    borderColor: '#1a2a6c',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        // Resource Utilization Chart
+        const resourceCtx = document.getElementById('resourceChart').getContext('2d');
+        new Chart(resourceCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Vehicles', 'Supplies', 'Personnel'],
+                datasets: [{
+                    label: 'Utilization (%)',
+                    data: [75, 60, 85],
+                    backgroundColor: ['#1a2a6c', '#b21f1f', '#fdbb2d']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        // Team Performance Chart
+        const teamCtx = document.getElementById('teamChart').getContext('2d');
+        new Chart(teamCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Response Time', 'Resolution Rate', 'Customer Satisfaction', 'Resource Usage', 'Team Coordination'],
+                datasets: [{
+                    label: 'Performance',
+                    data: [85, 92, 90, 88, 95],
+                    backgroundColor: 'rgba(26, 42, 108, 0.2)',
+                    borderColor: '#1a2a6c',
+                    pointBackgroundColor: '#1a2a6c'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        // Emergency Types Chart
+        const emergencyCtx = document.getElementById('emergencyChart').getContext('2d');
+        new Chart(emergencyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Medical', 'Rescue', 'Evacuation'],
+                datasets: [{
+                    data: [45, 30, 25],
+                    backgroundColor: ['#1a2a6c', '#b21f1f', '#fdbb2d']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        // Report filters
+        document.getElementById('time-period').addEventListener('change', function() {
+            // In a real app, you'd update the charts and tables based on the selected time period
+            console.log('Time period changed:', this.value);
+        });
+
+        document.getElementById('report-type').addEventListener('change', function() {
+            // In a real app, you'd update the charts and tables based on the selected report type
+            console.log('Report type changed:', this.value);
+        });
+
+        // Export button
+        document.querySelector('.export-btn').addEventListener('click', function() {
+            // In a real app, you'd generate and download the report
+            console.log('Exporting report...');
+        });
+    </script>
+</body>
+</html>

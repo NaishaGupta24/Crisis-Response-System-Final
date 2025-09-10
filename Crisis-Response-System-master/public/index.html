@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Management Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #293b82, #107f92, #3a3eb3);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+        
+        .logo {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .logo img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .logo-icon {
+            font-size: 80px;
+        }
+        
+        .logo h1 {
+            font-size: 3rem;
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 50px;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .option-card {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+        
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .option-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        .option-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .option-description {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+        
+        .option-button {
+            background: white;
+            color: #1a2a6c;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-button:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+        
+        .emergency-cta {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff4242;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+        }
+        
+        .emergency-cta:hover {
+            background: #e53030;
+            transform: scale(1.05);
+            animation: none;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 66, 66, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 66, 66, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 66, 66, 0);
+            }
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        /* Particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 30px;
+            }
+            
+            .option-card {
+                width: 100%;
+                padding: 30px;
+            }
+            
+            .emergency-cta {
+                position: relative;
+                top: unset;
+                right: unset;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .citizen-login-title {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+        }
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+        .modal-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        .modal-login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .citizen-password-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .modal-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+            <i class="fas fa-hands-helping logo-icon"></i>
+    
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-hands-helping logo-icon"></i>
+            <h1>Disaster Management System</h1>
+        </div>
+        
+        <p class="subtitle">
+            A comprehensive platform designed to connect citizens and government officials during emergency situations. 
+            Quick response saves lives. Choose your role to continue.
+        </p>
+        
+        <div class="options">
+            <div class="option-card" onclick="window.location.href='citizen/dashboard.html'">
+                <div class="option-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h2 class="option-title">Citizen</h2>
+                <p class="option-description">
+                    Request emergency assistance, find evacuation routes, and track the status of your support tickets. NO NEED TO LOG IN OR SIGN UP !!
+                </p>
+                <button class="option-button">Continue as Citizen</button>
+            </div>
+            
+            <div class="option-card" onclick="window.location.href='official/login.html'">
+                <div class="option-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h2 class="option-title">Government Official</h2>
+                <p class="option-description">
+                    Coordinate emergency responses, manage resources, and help citizens during crisis situations.
+                </p>
+                <button class="option-button">Continue as Official</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            © 2025 Disaster Management System | All Rights Reserved
+        </div>
+                    <label class="modal-label">Email</label>
+    
+    <!-- Citizen Login Modal -->
+    <div id="citizen-login-modal" class="modal">
+                    <label class="modal-label">Password</label>
+                    <label class="modal-label">Email</label>
+                <button type="submit" class="modal-login-btn">Login</button>
+            <button onclick="hideCitizenLogin()" class="modal-close-btn">×</button>
+                <div class="mb-20">
+                    <label class="modal-label">Password</label>
+                    <input type="password" id="citizen-password" required class="citizen-password-input">
+                </div>
+                    <label class="modal-label">Password</label>
+                    <input type="password" id="citizen-password" required class="citizen-password-input">
+                </div>
+                <button type="submit" class="modal-login-btn">Login</button>
+            </form>
+            <button onclick="hideCitizenLogin()" class="modal-close-btn">×</button>
+        </div>
+    </div>
+    
+    <script>
+        // Create particles effect
+        const particlesContainer = document.getElementById('particles');
+        
+        function createParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 2px and 6px
+                const size = Math.random() * 4 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                const xPos = Math.random() * 100;
+                const yPos = Math.random() * 100;
+                particle.style.left = `${xPos}%`;
+                particle.style.top = `${yPos}%`;
+                
+                // Random opacity
+                particle.style.opacity = Math.random() * 0.5 + 0.3;
+                
+                // Animation properties
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `float ${duration}s linear infinite`;
+                
+                // Add keyframes dynamically
+                const keyframes = `
+                    @keyframes float {
+                        0% {
+                            transform: translate(0, 0);
+                        }
+                        50% {
+                            transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px);
+                        }
+                        100% {
+                            transform: translate(0, 0);
+                        }
+                    }
+                `;
+                
+                const style = document.createElement('style');
+                style.innerHTML = keyframes;
+                document.head.appendChild(style);
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+
+        // Citizen Login Functions
+        function showCitizenLogin() {
+            document.getElementById('citizen-login-modal').style.display = 'flex';
+        }
+
+        function hideCitizenLogin() {
+            document.getElementById('citizen-login-modal').style.display = 'none';
+        }
+
+        // Handle citizen login
+        document.getElementById('citizen-login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('citizen-email').value;
+            const password = document.getElementById('citizen-password').value;
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password, role: 'citizen' })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store the auth token
+                    localStorage.setItem('authToken', data.token);
+                    // Redirect to dashboard
+                    window.location.href = 'citizen/dashboard.html';
+                } else {
+                    alert(data.message || 'Login failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('An error occurred during login. Please try again.');
+            }
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('citizen-login-modal');
+            if (event.target === modal) {
+                hideCitizenLogin();
+            }
+        }
+    </script>
+</body>
+</html> 
