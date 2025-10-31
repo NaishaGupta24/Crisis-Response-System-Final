@@ -76,7 +76,7 @@ To set up the project locally, follow these steps:
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/NaishaGupta24/Crisis-Response-System-Final.git
-   cd disaster-management
+   cd Crisis-Response-System-Final
    ```
 
 2. **Install Dependencies**:
