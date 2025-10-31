@@ -75,7 +75,7 @@ To set up the project locally, follow these steps:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/vibhor2608/Disaster-Management-Project.git
+   git clone https://github.com/NaishaGupta24/Crisis-Response-System-Final.git
    cd disaster-management
    ```
 
